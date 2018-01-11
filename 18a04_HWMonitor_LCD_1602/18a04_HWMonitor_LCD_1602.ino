@@ -8,7 +8,9 @@
 //-----------------------------------------------------------------------
 #define DHTPIN 9                // what digital pin we're connected to
 #define DHTTYPE DHT22           // DHT 22  (AM2302), AM2321
-#define timerPeriod 500000             // timer1, and set a 1/2 second period
+#define INT_PER 500000          // interrupt period in us
+#define P1S   0        #define P2S   P1S  + 1 #define P4S   P2S  + 1 #define P8S   P4S  + 1
+#define P16S  P8S  + 1 #define P32S  P16S + 1 #define P64S  P32S + 1 #define P128S P64S + 1
 
 DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal_I2C lcd(0x3f, 16, 2);

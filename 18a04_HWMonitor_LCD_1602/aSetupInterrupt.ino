@@ -1,13 +1,13 @@
 //-----------------------------------------------------------------------
 void setup(void) {
 
-  lcd.init();                   // initialize the lcd
+  lcd.init();       // initialize the lcd
   lcd.backlight();
-  lcd.clear();                  // очистить дисплей
+  lcd.clear();      // очистить дисплей
   showLogo();
 
-  Timer1.initialize(timerPeriod);         // initialize timer1, and set a 1/2 second period
-  Timer1.attachInterrupt(interrupt);      // attaches callback() as a timer overflow interrupt
+  Timer1.initialize(INT_PER);         // initialize timer1, and set a 1/2 second period
+  Timer1.attachInterrupt(interrupt);  // attaches callback() as a timer overflow interrupt
 
   Serial.begin(9600);
   dht.begin();
@@ -26,7 +26,7 @@ void loop(void) {
 }
 //-----------------------------------------------------------------------
 void interrupt() {
-  phase++;  if (phase > 15) phase = 0;
+  phase++;  // if (phase > 15) phase = 0;
   bReadTime = 1;
   bUpdateDisplay = 1;
   if (phase % 4 == 0) bReadDHT22 = 1;

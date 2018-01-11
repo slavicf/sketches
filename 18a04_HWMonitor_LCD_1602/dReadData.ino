@@ -35,10 +35,10 @@ void parsing() {
       index++;
     }
     index = 0;
-    bUpdateDisplay = 1;
+    //bUpdateDisplay = 1;
   }
   ulTimeout = millis();
   bTimeOut = 1;
-  //  }
+  //  } // refer to "while (Serial.available() > 0) {"
 }
 
