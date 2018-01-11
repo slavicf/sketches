@@ -14,16 +14,15 @@ DHT dht(DHTPIN, DHTTYPE);
 LiquidCrystal_I2C lcd(0x3f, 16, 2);
 
 byte phase;
-//time_t t;
 TimeElements tm;
 float fTemperature, fHumidity;
 
 char inData[82];       // массив входных значений (СИМВОЛЫ)
 int PCdata[20];        // массив численных значений показаний с компьютера
-                       // [0] - CPU temperature, [1] - GPU temperature
-                       // [2] - MB temperature,  [3] - HDD temperature
-                       // [4] - CPU usage,       [5] - FPU usage
-                       // [6] - CPU RAM usage,   [7] - GPU RAM usage
+int &tCPU = PCdata[0]; int &tGPU  = PCdata[1];
+int &tMB  = PCdata[2]; int &tHDD  = PCdata[3];
+int &uCPU = PCdata[4]; int &uGPU  = PCdata[5];
+int &uRAM = PCdata[6]; int &uGRAM = PCdata[7];
 byte index = 0;
 String string_convert;
 unsigned long ulTimeout;

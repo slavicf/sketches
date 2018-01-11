@@ -7,7 +7,7 @@ void setup(void) {
   showLogo();
 
   Timer1.initialize(timerPeriod);         // initialize timer1, and set a 1/2 second period
-  Timer1.attachInterrupt(interrupt);  // attaches callback() as a timer overflow interrupt
+  Timer1.attachInterrupt(interrupt);      // attaches callback() as a timer overflow interrupt
 
   Serial.begin(9600);
   dht.begin();
@@ -21,15 +21,21 @@ void setup(void) {
 }
 //-----------------------------------------------------------------------
 void loop(void) {
-  readData();
+  UpdateData();
   show();
 }
 //-----------------------------------------------------------------------
 void interrupt() {
-  phase = (phase < 16) ? phase + 1 : 0;
+  phase++;  if (phase > 15) phase = 0;
   bReadTime = 1;
   bUpdateDisplay = 1;
   if (phase % 4 == 0) bReadDHT22 = 1;
+//  Serial.print("Phase:");
+//  Serial.print(phase);
+//  Serial.print(" & 4:");
+//  Serial.print(phase & 4);
+//  Serial.print(" Phase:");
+//  Serial.println(phase);
 }
 //-----------------------------------------------------------------------
 
