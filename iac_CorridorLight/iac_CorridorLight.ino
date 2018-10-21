@@ -1,3 +1,8 @@
+/*
+  Arduino the Object Oriented way
+  http://paulmurraycbr.github.io/ArduinoTheOOWay.html
+*/
+
 #include <TimerOne.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -12,27 +17,17 @@
 #define PIXEL_PIN 12  // Digital IO pin connected to the NeoPixels.
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(PIXEL_COUNT, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
-class DetectEdge {
+//  Detect negative and positive edges
+class Edge {
     bool neg = false;
     bool pos = false;
-    bool stateNeg = false;
-    bool statePos = false;
+    bool oldState = false;
 
   public:
-    //    Button(byte attachTo) :
-    //      pin(attachTo)
-    //    {
-    //    }
-
-    //    void setup() {
-    //
-    //    }
-
     void detect(bool state) {
-      neg = state && !stateNeg; // detect negative edge
-      stateNeg = state;         // store old value
-      pos = !state && statePos; // detect positive edge
-      statePos = state;         // store old value
+      neg = state && !oldState; // detect negative edge
+      pos = !state && oldState; // detect positive edge
+      oldState = state;         // store old value
     }
 
     bool getNeg() {
@@ -46,8 +41,6 @@ class DetectEdge {
 
 class Input {
     const byte pin;
-    //    int state;
-    //    unsigned long debounceMs;
 
   public:
     Input(byte attachTo) :
@@ -57,7 +50,6 @@ class Input {
 
     void setup() {
       pinMode(pin, INPUT);
-      //      state = HIGH;
     }
 
     bool getState() {
@@ -67,34 +59,29 @@ class Input {
 
 class NeoPixel {
     long level = 0;
-    unsigned long storageMs = 0;
+    unsigned long oldMs = 0;
 
   public:
-//    void setup() {
-//
-//    }
+    void shine(bool dir) {
+      if (millis() - oldMs >= PERIOD) {
+        changeLevel(dir);
 
-  void shine(bool dir) {
-    if (millis() - storageMs >= PERIOD
-    ) {
-      changeLevel(dir);
-      
-      uint32_t color = level + (level << 8) + (level << 16);
-      for (uint16_t i = 0; i < PIXEL_COUNT; i++) {
-        strip.setPixelColor(i, color);
+        uint32_t color = level + (level << 8) + (level << 16);
+        for (uint16_t i = 0; i < PIXEL_COUNT; i++) {
+          strip.setPixelColor(i, color);
+        }
+        strip.show();
+
+        oldMs = millis();
       }
-      strip.show();
-
-      storageMs = millis();
     }
-  }
 
-  void changeLevel(bool dir) {
-    if (dir) level++;
-    else level--;
-    if (level < LEVEL_MIN) level = LEVEL_MIN;
-    if (level > LEVEL_MAX) level = LEVEL_MAX;
-  }
+    void changeLevel(bool dir) {
+      if (dir) level++;
+      else level--;
+      if (level < LEVEL_MIN) level = LEVEL_MIN;
+      if (level > LEVEL_MAX) level = LEVEL_MAX;
+    }
 };
 
 DetectEdge sensor();
