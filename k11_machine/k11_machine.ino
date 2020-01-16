@@ -10,45 +10,9 @@
 #define K2PB  6             // Кнопка К2 
 #define K3PB  7             // Кнопка К3
 #define K4PB  8             // Кнопка К4
+
+#include <Button.h>
 //-----------------------------------------------------------------------
-class Button {
-  const byte pin;
-  bool old_button_state = true;
-  bool actual_button_state = true;
-  unsigned long time_marker;    // time marker in milliseconds
-  unsigned long debounce = 50;  // debounce time in milliseconds
-    
-  public:
-//----------------------------- Constructor ------------------------------------------
-    Button(byte attachTo) : pin(attachTo) {
-      pinMode(pin, INPUT_PULLUP);
-      time_marker = millis();
-    }
-//----------------------------- Update state ------------------------------------------
-    void update() {
-      old_button_state = actual_button_state;
-      bool b_state = digitalRead(pin);
-      unsigned long ul_time = millis();
-      if (b_state) {
-        time_marker = ul_time;
-        actual_button_state = false;
-      } else if (ul_time - time_marker > debounce){
-        actual_button_state = true;
-      }
-    }
-//----------------------------- Get state ------------------------------------------
-    bool getState() {
-      return actual_button_state;
-    }
-//----------------------------- Get positive edge ------------------------------------------
-    bool getPos() {
-      return actual_button_state && !old_button_state;
-    }
-//----------------------------- Get negative edge ------------------------------------------
-    bool getNeg() {
-      return !actual_button_state && old_button_state;
-    }
-};
 //-----------------------------------------------------------------------
 class Relay {
   const byte pin;
