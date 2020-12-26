@@ -29,4 +29,3 @@ byte index = 0;
 String string_convert;
 unsigned long ulTimeout;
 boolean bReadDHT22, bReadTime, bUpdateDisplay, bTimeOut;
-
