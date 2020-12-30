@@ -34,9 +34,8 @@ char  menuLevel;
 int  menuItem[4];
 //  uint8_t bright = 0;
 
-uint8_t L0Buffer[][4] = { {0, 0, 0, _degree}, {0, 0, 0, _H}, {0, 0, 0, _degree}, {0, 0, 0, _H}, };
-uint8_t L2Buffer[][4] = { {_S, _P, _empty, _t}, {_S, _P, _empty, _H}, {_F, _0, _empty, _empty}, {_F, _1, _empty, _empty},
-                         {_H, _U, _empty, _empty}, {_H, _E, _A, _t}, {_S, _A, _U, _E}, {_empty, _r, _E, _t}  };
+uint8_t L0Buffer[][4] = { {0, 0, 0, _degree}, {0, 0, 0, _H}, {0, 0, 0, _degree}, {0, 0, 0, _H} };
+uint8_t L2Buffer[][4] = { {_t, 0, 0, 0}, {_H, 0, 0, 0}, {_F, _0, 0, 0}, {_F, _1, 0, 0}, {_H, _U, 0, 0}, {_H, _E, 0, 0}, {_S, _A, _U, _E}, {_r, _E, _t, 0}  };
 
 byte  hysteresis = 10;
 byte  phase = 0;
@@ -62,7 +61,7 @@ void setup() {  // -------------------------------------------------------------
 
   EEPROM.get(0, chamber[0].par);
   EEPROM.get(12, chamber[1].par);
-  printEEPROM();
+//  printEEPROM();
 
   expander.begin();
 
