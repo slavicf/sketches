@@ -23,7 +23,7 @@ void outputs() {
   if (chamber[1].par[5] == 2) b[7] = chamber[1].a[3];  else b[7] = chamber[1].par[5];
   
   output = (b[0] << 0) + (b[1] << 1) + (b[2] << 2) + (b[3] << 3) + (b[4] << 4) + (b[5] << 5) + (b[6] << 6) + (b[7] << 7);
-  expander.write8(~output);
+  expander.write8(output);
 //  output++;
 } // ------------------------------------------------------------------
 
