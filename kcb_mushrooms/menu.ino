@@ -10,7 +10,7 @@ void menu() {
 
 void  menuLevel0(uint8_t screen0, uint8_t screen1) {
 
-  menuItem[0] &= 0x01;
+  menuItem[0] &= 1;
   setBright(screen0, screen1);
   disp[0].point(true);
   disp[1].point(true);
@@ -33,9 +33,9 @@ void  menuLevel1() {
 
 void  menuLevel2() {
 
-  if (menuItem[2] < 0) menuItem[2] = 7;
-  if (menuItem[2] > 7) menuItem[2] = 0;
-
+  menuItem[2] &= 7;
+  if (menuItem[2] < 6) l2Display();
+  
   disp[menuItem[1]].point(false);
   disp[menuItem[1]].displayByte(L2Buffer[menuItem[2]]);
   byte idleDisplay = (menuItem[1] + 1) & 1;
@@ -43,25 +43,37 @@ void  menuLevel2() {
 
 } // ------------------------------------------------------------------
 
+void  l2Display () {
+  int value = chamber[menuItem[1]].par[menuItem[2]];
+  L2Buffer[menuItem[2]][3] = digToHEX(value % 10);
+  if (value > 9) L2Buffer[menuItem[2]][2] = digToHEX(value / 10 % 10);
+  else L2Buffer[menuItem[2]][2] = _empty;
+} // ------------------------------------------------------------------
+
 void  menuLevel3() {
 
-  if (menuItem[2] == 7) {  // Return
-    menuLevel = 0;
-    menuItem[2] = 0;
-  } else if (menuItem[2] == 6) {  // Save
-    menuItem[3] &= 1;
-    if (menuItem[3]) disp[menuItem[1]].displayByte( _Y, _E, _S, _empty );
-    else             disp[menuItem[1]].displayByte( _N, _O, _empty, _empty );
-    //    menuLevel = 2;
-  } else if (menuItem[2] == 0 || menuItem[2] == 1) {
+  if (menuItem[2] < 2) {
     disp[menuItem[1]].displayInt(menuItem[3]);
-  } else {
+    
+  }  else if (menuItem[2] < 6) {
     if (menuItem[3] < 0) menuItem[3] = 2;
     if (menuItem[3] > 2) menuItem[3] = 0;
-    if (menuItem[3] == 0) disp[menuItem[1]].displayByte( _O, _F, _F, _empty );
-    if (menuItem[3] == 1) disp[menuItem[1]].displayByte( _O, _n, _empty, _empty );
-    if (menuItem[3] == 2) disp[menuItem[1]].displayByte( _A, _u, _t, _o );
+    if (menuItem[3] == 0) disp[menuItem[1]].displayByte( _O, _F, _F, 0 );   // OFF
+    if (menuItem[3] == 1) disp[menuItem[1]].displayByte( _O, _n, 0, 0 );   // ON
+    if (menuItem[3] == 2) disp[menuItem[1]].displayByte( _A, _u, _t, _o );   // AUTO
+    
+  }  else if (menuItem[2] == 6) {  // Save
+    menuItem[3] &= 1;
+    if (menuItem[3]) disp[menuItem[1]].displayByte( _Y, _E, _S, 0 );  // YES
+    else             disp[menuItem[1]].displayByte( _N, _O, 0, 0 );  // NO
+    //    menuLevel = 2;
+    
+  }  else {  // Return
+    menuLevel = 0;
+    menuItem[1] = 0;
+    menuItem[2] = 0;
   }
+  
   byte idleDisplay = (menuItem[1] + 1) & 1;
   disp[idleDisplay].displayByte(L0Buffer[menuItem[0] + idleDisplay * 2]);
 
@@ -72,7 +84,7 @@ void  menuLevel4() {
   if (menuItem[2] == 6) {  // Save
     if (menuItem[3]) {
       EEPROM.put(menuItem[1] * 12, chamber[menuItem[1]].par);
-      printEEPROM();
+//      printEEPROM();
       menuItem[3] = 0;
       disp[menuItem[1]].displayByte( _D, _O, _N, _E );
       delay(2000);
