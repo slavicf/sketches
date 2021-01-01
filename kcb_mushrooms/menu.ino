@@ -1,14 +1,14 @@
 
 void menu() {
-  if (menuLevel == 0) menuLevel0(0, 0);
-  if (menuLevel == 1) menuLevel1();
-  if (menuLevel == 2) menuLevel2();
-  if (menuLevel == 3) menuLevel3();
-  if (menuLevel == 4) menuLevel4();
+  if (menuLevel == 0) menuLevel0(0, 0);   // Select Temperature / Humidity
+  if (menuLevel == 1) menuLevel1();       // Select active Display / Chamber
+  if (menuLevel == 2) menuLevel2();       // Select Parameter
+  if (menuLevel == 3) menuLevel3();       // Change Selected Value
+  if (menuLevel == 4) menuLevel4();       // Store Value
 
 } // ------------------------------------------------------------------
 
-void  menuLevel0(uint8_t screen0, uint8_t screen1) {
+void  menuLevel0(uint8_t screen0, uint8_t screen1) {    // Select Temperature / Humidity
 
   menuItem[0] &= 1;
   setBright(screen0, screen1);
@@ -20,7 +20,13 @@ void  menuLevel0(uint8_t screen0, uint8_t screen1) {
 
 } // ------------------------------------------------------------------
 
-void  menuLevel1() {
+void setBright(uint8_t i, uint8_t k) {      // Set Displays Brightness
+  disp[0].brightness(i);
+  disp[1].brightness(k);
+
+} // ------------------------------------------------------------------
+
+void  menuLevel1() {    // Select Active Display / Chamber
 
   menuItem[1] &= 1;
   if (menuItem[1] == 0) {
@@ -31,7 +37,7 @@ void  menuLevel1() {
 
 } // ------------------------------------------------------------------
 
-void  menuLevel2() {
+void  menuLevel2() {    // Select Parameter
 
   menuItem[2] &= 7;
   if (menuItem[2] < 6) l2Display();
@@ -43,14 +49,14 @@ void  menuLevel2() {
 
 } // ------------------------------------------------------------------
 
-void  l2Display () {
+void  l2Display () {    // Display Parameter Value
   int value = chamber[menuItem[1]].par[menuItem[2]];
   L2Buffer[menuItem[2]][3] = digToHEX(value % 10);
   if (value > 9) L2Buffer[menuItem[2]][2] = digToHEX(value / 10 % 10);
   else L2Buffer[menuItem[2]][2] = _empty;
 } // ------------------------------------------------------------------
 
-void  menuLevel3() {
+void  menuLevel3() {    // Change Selected Value
 
   if (menuItem[2] < 2) {
     disp[menuItem[1]].displayInt(menuItem[3]);
@@ -79,7 +85,7 @@ void  menuLevel3() {
 
 } // ------------------------------------------------------------------
 
-void  menuLevel4() {
+void  menuLevel4() {    // Store Value
 
   if (menuItem[2] == 6) {  // Save
     if (menuItem[3]) {
@@ -90,12 +96,12 @@ void  menuLevel4() {
       delay(2000);
     }
   }
-  chamber[menuItem[1]].par[menuItem[2]] = menuItem[3]; // * 10;
+  chamber[menuItem[1]].par[menuItem[2]] = menuItem[3];
   menuLevel = 2;
 
 } // ------------------------------------------------------------------
 
-void  printEEPROM() {
+void  printEEPROM() {     // For Testing
   for (int i = 0; i < 6; i++) {
     Serial.print(chamber[0].par[i]);
     Serial.print(" ");
@@ -109,12 +115,6 @@ void  printEEPROM() {
   }
 
   Serial.println();
-
-} // ------------------------------------------------------------------
-
-void setBright(uint8_t screen0, uint8_t screen1) {
-  disp[0].brightness(screen0);
-  disp[1].brightness(screen1);
 
 } // ------------------------------------------------------------------
 

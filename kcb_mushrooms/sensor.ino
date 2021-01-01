@@ -1,11 +1,21 @@
 
 void  sensors (byte i) {
-  
-  chamber[i].temp = dht[i].readTemperature() * 10;
-  chamber[i].hum = dht[i].readHumidity() * 10;
-  if (chamber[i].hum > 999) chamber[i].hum = 999;
-  dhtToArray(&L0Buffer[0 + i * 2][0], 2, chamber[i].temp);
-  dhtToArray(&L0Buffer[1 + i * 2][0], 2, chamber[i].hum);
+  float t = dht[i].readTemperature();
+  float h = dht[i].readHumidity();
+  byte pTemp = i * 2;
+  byte pHum  = pTemp + 1;
+  if (isnan(t) || isnan(h)) {
+    chamber[i].temp = 999;
+    chamber[i].hum  = 999;
+    L0Buffer[pTemp][0] = _n;  L0Buffer[pTemp][1] = _A;  L0Buffer[pTemp][2] = _n;
+    L0Buffer[pHum ][0] = _n;  L0Buffer[pHum ][1] = _A;  L0Buffer[pHum ][2] = _n;
+  } else {
+    chamber[i].temp = t * 10;
+    chamber[i].hum  =  h * 10;
+    if (chamber[i].hum > 999) chamber[i].hum = 999;
+    dhtToArray(&L0Buffer[pTemp][0], 2, chamber[i].temp);
+    dhtToArray(&L0Buffer[pHum ][0], 2, chamber[i].hum);
+  }
   
 } // ------------------------------------------------------------------
 

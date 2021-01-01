@@ -5,10 +5,10 @@ void  service() {
   if (millis() - pTimer > pCycle) {
     pTimer = millis();
 
-    if ((phase & 0x0F) == 0) sensors(0); // 3.2 sec
-    if ((phase & 0x0F) == 8) sensors(1); // 3.2 sec
-    menu();    //    if ((phase & 0x01) == 1) displ(); // 0.2 sec
-    if ((phase & 0x03) == 3) outputs(); // 0.8 sec
+    if ((phase & 0x0F) == 0) sensors(0);  // 1.6 sec
+    if ((phase & 0x0F) == 8) sensors(1);  // 1.6 sec
+    menu();                               // 0.1 sec
+    if ((phase & 0x03) == 3) outputs();   // 0.4 sec
 
     phase++;
   }
