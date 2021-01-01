@@ -4,12 +4,13 @@ void  service() {
 
   if (millis() - pTimer > pCycle) {
     pTimer = millis();
-    phase++;
 
-    if ((phase & 0x0F) == 0) sensors(1); // 3.2 sec
-    if ((phase & 0x0F) == 8) sensors(0); // 3.2 sec
+    if ((phase & 0x0F) == 0) sensors(0); // 3.2 sec
+    if ((phase & 0x0F) == 8) sensors(1); // 3.2 sec
     menu();    //    if ((phase & 0x01) == 1) displ(); // 0.2 sec
     if ((phase & 0x03) == 3) outputs(); // 0.8 sec
+
+    phase++;
   }
 
   if (menuLevel > 0) {  // Menu exit timer
