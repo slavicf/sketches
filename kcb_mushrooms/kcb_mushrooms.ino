@@ -26,8 +26,7 @@ GyverTM1637 disp[] = { GyverTM1637( D0_CLK, D0_DIO), GyverTM1637( D0_CLK, D1_DIO
 Encoder enc1(ENC_CLK, ENC_DT, ENC_SW, TYPE2);
 PCF8574 expander(0x27);
 
-//struct  params {  int sp_t;    int sp_h;    byte f0_mode;    byte f1_mode;    byte hu_mode;    byte he_mode;  };
-struct  chamber {  int temp;  int hum;  int par[6];  int save;  int a[6];  };
+struct  chamber {  int temp;  int hum;  int par[6];  int save;  int a[6];  };   //struct  params {  int sp_t;    int sp_h;    byte f0_mode;    byte f1_mode;    byte hu_mode;    byte he_mode;  };
 chamber chamber[2];
 
 char  menuLevel;
