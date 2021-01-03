@@ -1,5 +1,8 @@
 
 void  sensors (byte i) {
+
+//  Serial.print((int) m.level);  Serial.print(" ");  Serial.print((int) sensV);  Serial.print(" ");  Serial.print((int) activ);  Serial.print(" ");  Serial.print((int) item2);  Serial.print(" ");  Serial.print((int) item3);  Serial.println();
+
   float t = dht[i].readTemperature();
   float h = dht[i].readHumidity();
   byte pTemp = i * 2;
@@ -7,22 +10,22 @@ void  sensors (byte i) {
   if (isnan(t) || isnan(h)) {
     chamber[i].temp = 999;
     chamber[i].hum  = 999;
-    L0Buffer[pTemp][0] = _n;  L0Buffer[pTemp][1] = _A;  L0Buffer[pTemp][2] = _n;
-    L0Buffer[pHum ][0] = _n;  L0Buffer[pHum ][1] = _A;  L0Buffer[pHum ][2] = _n;
+    L0Buffer[pTemp][0] = _E;  L0Buffer[pTemp][1] = _r;  L0Buffer[pTemp][2] = _r;
+    L0Buffer[pHum ][0] = _E;  L0Buffer[pHum ][1] = _r;  L0Buffer[pHum ][2] = _r;
   } else {
     chamber[i].temp = t * 10;
     chamber[i].hum  =  h * 10;
     if (chamber[i].hum > 999) chamber[i].hum = 999;
-    dhtToArray(&L0Buffer[pTemp][0], 2, chamber[i].temp);
-    dhtToArray(&L0Buffer[pHum ][0], 2, chamber[i].hum);
+    dhtToArray(L0Buffer[pTemp], 2, chamber[i].temp);
+    dhtToArray(L0Buffer[pHum ], 2, chamber[i].hum);
   }
   
 } // ------------------------------------------------------------------
 
-void  dhtToArray(uint8_t *pointer, int pos, int value) {
+void  dhtToArray(uint8_t arr[], int pos, int value) {
   
-  pointer[pos] = digToHEX(value % 10);
-  if (pos > 0) dhtToArray(&pointer[0], --pos, value / 10);
+  arr[pos] = digToHEX(value % 10);
+  if (pos > 0) dhtToArray(arr, --pos, value / 10);
   
 } // ------------------------------------------------------------------
 

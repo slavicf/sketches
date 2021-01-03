@@ -2,8 +2,8 @@
 void outputs() {
 
   autoMode();
-  output = (manAuto( 0, 2 ) << 0) + (manAuto( 0, 3 ) << 1) + (manAuto( 0, 4 ) << 2) + (manAuto( 0, 5 ) << 3) + 
-           (manAuto( 1, 2 ) << 4) + (manAuto( 1, 3 ) << 5) + (manAuto( 1, 4 ) << 6) + (manAuto( 1, 5 ) << 7);
+  byte output = (manAuto( 0, 2 ) << 0) + (manAuto( 0, 3 ) << 1) + (manAuto( 0, 4 ) << 2) + (manAuto( 0, 5 ) << 3) + 
+                (manAuto( 1, 2 ) << 4) + (manAuto( 1, 3 ) << 5) + (manAuto( 1, 4 ) << 6) + (manAuto( 1, 5 ) << 7);
   expander.write8(output);
 
 //  serOut(output);

@@ -13,12 +13,10 @@ void  service() {
     phase++;
   }
 
-  if (menuLevel > 0) {  // Menu exit timer
-    if (millis() - mTimer > mCycle) {
-      mTimer = millis();  // Menu exit timer reset
-      if (menuLevel == 2 || menuLevel == 1) menuItem[menuLevel] = 0;
-      menuLevel--;
-    }
+  if ((m.level > 0) && (millis() - m.timer > m.cycle)) {  // Menu exit timer
+    m.timer = millis();  // Menu exit timer reset
+    m.level--;
+    if      (m.level == 0) toLevel0();
   }
 
 } // ------------------------------------------------------------------

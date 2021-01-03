@@ -1,103 +1,103 @@
 
 void menu() {
-  if (menuLevel == 0) menuLevel0(0, 0);   // Select Temperature / Humidity
-  if (menuLevel == 1) menuLevel1();       // Select active Display / Chamber
-  if (menuLevel == 2) menuLevel2();       // Select Parameter
-  if (menuLevel == 3) menuLevel3();       // Change Selected Value
-  if (menuLevel == 4) menuLevel4();       // Store Value
 
+//  m.level = constrain(menuLevel, 0, 4);
+  if      (m.level == 0) menuLevel0();    // Select Temperature / Humidity
+  else if (m.level == 1) menuLevel1();    // Select active Display / Chamber
+  else if (m.level == 2) menuLevel2();    // Select Parameter
+  else if (m.level == 3) menuLevel3();    // Change Selected Value
+  else if (m.level == 4) menuLevel4();    // Store Value
+  else m.level = 0;
+
+  byte idleD = (activ + 1) & 1;           // Idle Display
+  disp[idleD].brightness(0);
+  disp[idleD].displayByte(L0Buffer[sensV + idleD * 2]);
+  
 } // ------------------------------------------------------------------
 
-void  menuLevel0(uint8_t screen0, uint8_t screen1) {    // Select Temperature / Humidity
+void  menuLevel0() {    // Select Temperature / Humidity
 
-  menuItem[0] &= 1;
-  setBright(screen0, screen1);
-  disp[0].point(true);
-  disp[1].point(true);
-
-  disp[0].displayByte(L0Buffer[menuItem[0]]);
-  disp[1].displayByte(L0Buffer[menuItem[0] + 2]);
-
-} // ------------------------------------------------------------------
-
-void setBright(uint8_t i, uint8_t k) {      // Set Displays Brightness
-  disp[0].brightness(i);
-  disp[1].brightness(k);
+  sensV &= 1;
+  disp[activ].displayByte(L0Buffer[sensV + activ * 2]);
 
 } // ------------------------------------------------------------------
 
 void  menuLevel1() {    // Select Active Display / Chamber
 
-  menuItem[1] &= 1;
-  if (menuItem[1] == 0) {
-    menuLevel0(3, 0);
-  } else if (menuItem[1] == 1) {
-    menuLevel0(0, 3);
-  }
+  activ &= 1;
+  disp[activ].brightness(3);
+  menuLevel0();
+  item2 = 0;
 
 } // ------------------------------------------------------------------
 
 void  menuLevel2() {    // Select Parameter
 
-  menuItem[2] &= 7;
-  if (menuItem[2] < 6) l2Display();
+  item2 &= 7;
+  int value = chamber[activ].par[item2];
+  if      (item2 < 2) setPoint(value);
+  else if (item2 < 6) mode(value);
   
-  disp[menuItem[1]].point(false);
-  disp[menuItem[1]].displayByte(L2Buffer[menuItem[2]]);
-  byte idleDisplay = (menuItem[1] + 1) & 1;
-  disp[idleDisplay].displayByte(L0Buffer[menuItem[0] + idleDisplay * 2]);
+  disp[activ].point(false);
+  disp[activ].displayByte(L2Buffer[item2]);
 
 } // ------------------------------------------------------------------
 
-void  l2Display () {    // Display Parameter Value
-  int value = chamber[menuItem[1]].par[menuItem[2]];
-  L2Buffer[menuItem[2]][3] = digToHEX(value % 10);
-  if (value > 9) L2Buffer[menuItem[2]][2] = digToHEX(value / 10 % 10);
-  else L2Buffer[menuItem[2]][2] = _empty;
+void  setPoint (int value) {    // Prepare Setpoint Value
+  if (value > 99)   value = 99;
+  L2Buffer[item2][3] = digToHEX(value % 10);
+  if (value > 9) L2Buffer[item2][2] = digToHEX(value / 10 % 10);
+  else L2Buffer[item2][2] = _empty;
+} // ------------------------------------------------------------------
+
+void  mode (int value) {        // Prepare Mode Value
+  if      (value == 0) { L2Buffer[item2][2] = _o; L2Buffer[item2][3] = _F; }
+  else if (value == 1) { L2Buffer[item2][2] = _o; L2Buffer[item2][3] = _N; }
+  else if (value == 2) { L2Buffer[item2][2] = _A; L2Buffer[item2][3] = _U; }
+  
 } // ------------------------------------------------------------------
 
 void  menuLevel3() {    // Change Selected Value
 
-  if (menuItem[2] < 2) {
-    disp[menuItem[1]].displayInt(menuItem[3]);
+  if      (item2 < 2)  disp[activ].displayInt(item3);
+  else if (item2 < 6) {
+    if      (item3 <  0) item3 = 2;
+    else if (item3 >  2) item3 = 0;
+    if      (item3 == 0) disp[activ].displayByte( 0, 0, _o, _F );   // OFF
+    else if (item3 == 1) disp[activ].displayByte( 0, 0, _o, _N );   // ON
+    else if (item3 == 2) disp[activ].displayByte( 0, 0, _A, _U );   // AUTO
     
-  }  else if (menuItem[2] < 6) {
-    if (menuItem[3] < 0) menuItem[3] = 2;
-    if (menuItem[3] > 2) menuItem[3] = 0;
-    if (menuItem[3] == 0) disp[menuItem[1]].displayByte( _O, _F, _F, 0 );   // OFF
-    if (menuItem[3] == 1) disp[menuItem[1]].displayByte( _O, _n, 0, 0 );   // ON
-    if (menuItem[3] == 2) disp[menuItem[1]].displayByte( _A, _u, _t, _o );   // AUTO
-    
-  }  else if (menuItem[2] == 6) {  // Save
-    menuItem[3] &= 1;
-    if (menuItem[3]) disp[menuItem[1]].displayByte( _Y, _E, _S, 0 );  // YES
-    else             disp[menuItem[1]].displayByte( _N, _O, 0, 0 );  // NO
-    //    menuLevel = 2;
+  } else if (item2 == 6) {  // Save
+    item3 &= 1;
+    if (item3) disp[activ].displayByte( _Y, _E, _S,  0 );  // YES
+    else       disp[activ].displayByte( _N, _O,  0,  0 );  // NO
+    //    m.level = 2;
     
   }  else {  // Return
-    menuLevel = 0;
-    menuItem[1] = 0;
-    menuItem[2] = 0;
+    toLevel0();
   }
-  
-  byte idleDisplay = (menuItem[1] + 1) & 1;
-  disp[idleDisplay].displayByte(L0Buffer[menuItem[0] + idleDisplay * 2]);
 
+} // ------------------------------------------------------------------
+void  toLevel0() {
+    disp[activ].point(true);
+    disp[activ].brightness(0);
+    m.level = 0;
+    activ = 0;
 } // ------------------------------------------------------------------
 
 void  menuLevel4() {    // Store Value
 
-  if (menuItem[2] == 6) {  // Save
-    if (menuItem[3]) {
-      EEPROM.put(menuItem[1] * 12, chamber[menuItem[1]].par);
+  if (item2 == 6) {  // Save
+    if (item3) {
+      EEPROM.put(activ * 12, chamber[activ].par);
 //      printEEPROM();
-      menuItem[3] = 0;
-      disp[menuItem[1]].displayByte( _D, _O, _N, _E );
+      item3 = 0;
+      disp[activ].displayByte( _D, _O, _N, _E );
       delay(2000);
     }
   }
-  chamber[menuItem[1]].par[menuItem[2]] = menuItem[3];
-  menuLevel = 2;
+  chamber[activ].par[item2] = item3;
+  m.level = 2;
 
 } // ------------------------------------------------------------------
 
