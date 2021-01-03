@@ -26,18 +26,32 @@ GyverTM1637 disp[] = { GyverTM1637( D0_CLK, D0_DIO), GyverTM1637( D0_CLK, D1_DIO
 Encoder enc1(ENC_CLK, ENC_DT, ENC_SW, TYPE2);
 PCF8574 expander(0x27);
 
-struct  chamber {  int temp;  int hum;  int par[6];  int save;  int a[6];  };   //struct  params {  int sp_t;    int sp_h;    byte f0_mode;    byte f1_mode;    byte hu_mode;    byte he_mode;  };
+//class   Chamber {
+//  DHT         dht   (DHTPIN, DHTTYPE);
+//  GyverTM1637 disp  (CLK, DIO);
+//  int   temp;
+//  int   hum;
+//  int   par[6];   // sp_t, sp_h, f0_mode, f1_mode, hu_mode, he_mode
+//  int   save;     // just for safe storage in mLevel4
+//}
+
+struct  chamber { int temp;  int hum;  int par[8];  int save;  int a[4];  };  //struct  params {  int sp_t;    int sp_h;    byte f0_mode;    byte f1_mode;    byte hu_mode;    byte he_mode;  };
 chamber chamber[2];
+struct  sens  { int temp; int hum; };
+sens    sensor[2];
 
-struct  sMenu   { char level = 0; char item[4]; unsigned long timer = 0; unsigned long cycle = 16000; };
-sMenu   m;
-#define sensV m.item[0]
-#define activ m.item[1]
-#define item2 m.item[2]
-#define item3 m.item[3]
+char  mLevel = 0;
+char  mItem[4];
+unsigned long mTimer = 0;
+unsigned long mCycle = 16000;
 
-uint8_t L0Buffer[][4] = { {0, 0, 0, _degree}, {0, 0, 0, _H}, {0, 0, 0, _degree}, {0, 0, 0, _H} };
-uint8_t L2Buffer[][4] = { {_t, 0, 0, 0}, {_H, 0, 0, 0}, {_F, _0, 0, 0}, {_F, _1, 0, 0}, {_H, _U, 0, 0}, {_H, _E, 0, 0}, {_S, _A, _U, _E}, {_r, _E, _t, 0}  };
+uint8_t mBuf[][4]    = { {_t, 0, 0, 0}, {_h, 0, 0, 0}, {_t, _b, 0, 0}, {_h, _b, 0, 0}, {_F, _0, 0, 0}, {_F, _1, 0, 0}, {_H, _U, 0, 0}, {_H, _E, 0, 0}, {_S, _A, _U, _E}, {_r, _E, _t, 0}  };
+uint8_t sBuf[][2][4] = { { {0, 0, 0, _degree}, {0, 0, 0, _h} }, { {0, 0, 0, _degree}, {0, 0, 0, _h} } };
+
+#define sensV mItem[0]
+#define activ mItem[1]
+#define item2 mItem[2]
+#define item3 mItem[3]
 
 byte  hysteresis = 10;
 byte  phase = 0;
@@ -58,7 +72,7 @@ void setup() {  // -------------------------------------------------------------
   dht[1].begin();
 
   EEPROM.get(0, chamber[0].par);
-  EEPROM.get(12, chamber[1].par);
+  EEPROM.get(16, chamber[1].par);
 //  printEEPROM();
 
   expander.begin();

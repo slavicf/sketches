@@ -13,10 +13,10 @@ void  service() {
     phase++;
   }
 
-  if ((m.level > 0) && (millis() - m.timer > m.cycle)) {  // Menu exit timer
-    m.timer = millis();  // Menu exit timer reset
-    m.level--;
-    if      (m.level == 0) toLevel0();
+  if ((mLevel > 0) && (millis() - mTimer > mCycle)) {  // Menu exit timer
+    mTimer = millis();  // Menu exit timer reset
+    mLevel--;
+    if      (mLevel == 0) toLevel0();
   }
 
 } // ------------------------------------------------------------------

@@ -2,8 +2,8 @@
 void outputs() {
 
   autoMode();
-  byte output = (manAuto( 0, 2 ) << 0) + (manAuto( 0, 3 ) << 1) + (manAuto( 0, 4 ) << 2) + (manAuto( 0, 5 ) << 3) + 
-                (manAuto( 1, 2 ) << 4) + (manAuto( 1, 3 ) << 5) + (manAuto( 1, 4 ) << 6) + (manAuto( 1, 5 ) << 7);
+  byte output = (manAuto( 0, 4 ) << 0) + (manAuto( 0, 5 ) << 1) + (manAuto( 0, 6 ) << 2) + (manAuto( 0, 7 ) << 3) + 
+                (manAuto( 1, 4 ) << 4) + (manAuto( 1, 5 ) << 5) + (manAuto( 1, 6 ) << 6) + (manAuto( 1, 7 ) << 7);
   expander.write8(output);
 
 //  serOut(output);
@@ -24,7 +24,7 @@ void  hyst (int pv, int sp, int &autoOut) {
 } // ------------------------------------------------------------------
 
 bool manAuto (byte i, byte k) {
-  return (chamber[i].par[k] == 2) ? chamber[i].a[k-2] : chamber[i].par[k];
+  return (chamber[i].par[k] == 2) ? chamber[i].a[k-4] : chamber[i].par[k];
 } // ------------------------------------------------------------------
 
 //void  serOut(uint8_t out) {
