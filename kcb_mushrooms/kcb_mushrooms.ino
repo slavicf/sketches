@@ -35,6 +35,8 @@ PCF8574 expander(0x27);
 //  int   save;     // just for safe storage in mLevel4
 //}
 
+//void (*menuLevel[])() { menuLevel0, menuLevel1, menuLevel2, menuLevel3, menuLevel4 };   // https://forum.arduino.cc/index.php?topic=446798.0    https://arduino.stackexchange.com/questions/35516/help-with-struct-variable
+
 struct  chamber { int temp;  int hum;  int par[8];  int save;  int a[4];  };  //struct  params {  int sp_t;    int sp_h;    byte f0_mode;    byte f1_mode;    byte hu_mode;    byte he_mode;  };
 chamber chamber[2];
 struct  sens  { int temp; int hum; };

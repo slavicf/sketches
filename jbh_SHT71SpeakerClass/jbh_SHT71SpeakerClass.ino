@@ -6,7 +6,7 @@
 #include "Arduino.h"
 #include "SoftwareSerial.h"
 #include "DFRobotDFPlayerMini.h"
-#include <Sensirion.h>
+#include "Sensirion.h"
 //-----------------------------------------------------------------------
 #define SHT_DATA   7  // SHT7x Data pin
 #define SHT_CLOCK  8  // SHT7x Clock pin

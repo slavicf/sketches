@@ -13,14 +13,22 @@ void outputs() {
 
 void  autoMode () {
   hyst(chamber[0].temp, chamber[0].par[0] * 10, chamber[0].a[3]);
+  hystP(chamber[0].temp, chamber[0].par[0] * 10, chamber[0].a[1]);
   hyst(chamber[0].hum , chamber[0].par[1] * 10, chamber[0].a[2]);
+
   hyst(chamber[1].temp, chamber[1].par[0] * 10, chamber[1].a[3]);
+  hystP(chamber[1].temp, chamber[1].par[0] * 10, chamber[1].a[1]);
   hyst(chamber[1].hum , chamber[1].par[1] * 10, chamber[1].a[2]);
 } // ------------------------------------------------------------------
 
 void  hyst (int pv, int sp, int &autoOut) {
   if (pv <  sp - hysteresis)  autoOut = 1;
   if (pv >= sp)               autoOut = 0;
+} // ------------------------------------------------------------------
+
+void  hystP (int pv, int sp, int &autoOut) {
+  if (pv >  sp + hysteresis)  autoOut = 1;
+  if (pv <= sp)               autoOut = 0;
 } // ------------------------------------------------------------------
 
 bool manAuto (byte i, byte k) {

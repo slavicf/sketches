@@ -1,5 +1,8 @@
 
 void menu() {
+
+//  if (mLevel < 0) mLevel = 0; if (mLevel > 4) mLevel = 4;
+//  menuLevel[mLevel]();
   if      (mLevel == 0) menuLevel0();    // Select Temperature / Humidity
   else if (mLevel == 1) menuLevel1();    // Select active Display / Chamber
   else if (mLevel == 2) menuLevel2();    // Select Parameter
